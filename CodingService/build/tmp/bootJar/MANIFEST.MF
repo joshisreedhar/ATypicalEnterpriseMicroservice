@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Start-Class: com.enterprise.codingService.CodingServiceApplication
+Main-Class: org.springframework.boot.loader.JarLauncher
+
