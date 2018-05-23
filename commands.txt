@@ -1,0 +1,12 @@
+To build docker image with jar file
+===================================
+docker build --no-cache --tag=coding-service:latest --rm=true --build-arg JAR_FILE=app.jar .
+
+
+To run the comtainer
+===================
+docker run -p 8080:8080 -t coding-service:latest
+
+Run Zipkin
+==========
+docker run -d -p 9411:9411 openzipkin/zipkin
