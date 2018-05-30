@@ -3,7 +3,7 @@ var Client = require('node-rest-client').Client;
 var fs = require('fs');
 
 
-fs.readFile('orderOptions.json', 'utf8', function(err, contents) {
+fs.readFile('orderOptions_copy.json', 'utf8', function(err, contents) {
 
 var client = new Client();
  
