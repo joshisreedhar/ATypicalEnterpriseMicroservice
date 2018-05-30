@@ -9,7 +9,9 @@ buildscript {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 	dependencies {
-		classpath "io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE"
+		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1")
 	}
 }
 
@@ -17,6 +19,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.sonarqube'
 
 group = 'com.enterprise'
 version = '1.0.0'
@@ -47,4 +50,21 @@ task copyJar(type: Copy) {
 	from "${buildDir}/libs"
 	include  "*.jar"
 	into ""
+
+}
+
+task sonarqubeResult {
+	doLast {
+//		def sonarAuthToken = System.getProperty("sonar.login")
+//		def projectKey = project.group + ':' + project.name
+//		def sonarurl = System.getProperty("sonar.host.url")+'/api/qualitygates/project_status?projectKey='+projectKey
+		def basicAuth = ("c6ff3ce68c913a7358c97d94ba149f56be130221" + ":").bytes.encodeBase64().toString()
+		def sonarurl ="http://localhost:9000/api/qualitygates/project_status?projectKey=com.enterprise:codingService"
+		def json = sonarurl.toURL().getText(requestProperties: [Authorization: 'Basic ' + basicAuth])
+		def parsed = new groovy.json.JsonSlurper().parseText(json)
+
+		if(parsed['projectStatus']['status'] != 'OK'){
+			throw new GradleException("sonar quality gateway is failing!")
+		}
+	}
 }
